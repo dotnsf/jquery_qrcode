@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<title>jquery.qrcode.js</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="./qrcode.min.js"></script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<style type="text/css">
+html, body{
+  text-align: center;
+  background-color: #fafafa;
+  font-size: 20px;
+  color: #333;
+}
+#qrcode:active{
+  border: 1px solid #334c66;
+  background-color: #69c;
+  -webkit-box-shadow:inset 0px 0px 8px #334c66;
+  -moz-box-shadow: inset 0px 0px 2px #3a6da0;
+  box-shadow: 0px 0px 2px #3a6da0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <input type="text" id="text" value=""/><button class="btn btn-primary" onClick="generateQRCode();">QRコード</button>
+</nav>
+
+<canvas id="qrcode"></canvas>
+
+<script>
+var text = '';
+
+$(function(){
+  $('#qrcode').on( 'click', function( e ){
+    copyClipboard( text );
+  });
+});
+
+function generateQRCode(){
+  $('#qrcoe').html( '' );
+  text = $('#text').val();
+  if( text ){
+    QRCode.toCanvas( document.getElementById( 'qrcode' ), text, function( err ){
+      if( err ){
+        console.log( err );
+      }
+    });
+  }
+}
+
+function copyClipboard( str ){
+  //. 空 div と空 pre
+  var tmp = document.createElement( 'div' );
+  var pre = document.createElement( 'pre' );
+
+  pre.style.webkitUserSelect = 'auto';
+  pre.style.userSelect = 'auto';
+  tmp.appendChild( pre ).textContent = str;
+
+  //. 画面外へ
+  var s = tmp.style;
+  s.position = 'fixed';
+  s.right = '200%';
+
+  //. body に追加
+  document.body.appendChild( tmp );
+  document.getSelection().selectAllChildren( tmp );
+
+  //. クリップボードにコピー
+  var result = document.execCommand( "copy" );
+
+  //. 要素削除
+  document.body.removeChild( tmp );
+
+  return result;
+}
+</script>
+</body>
+</html>
